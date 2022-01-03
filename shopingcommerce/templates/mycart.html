@@ -1,0 +1,24 @@
+<html>
+{% block content %}
+<h1>MY CART</h1>
+{% for p in products %}
+<img src="{{p.imageurl}}" height="400" width="400"><br>
+{{p.Itemid}}<br>
+{{p.Itemname}}<br>
+{{p.quantity}}
+<div class="removewcart">
+    <form action='{% url "shoppingapp:viewmycart" %}' method='post'>
+        <input type="hidden" value="{{p.Itemid}}" name="id">
+        <input type="submit" value="Remove">
+        {% csrf_token %}
+    </form>
+    {% csrf_token %}   
+</div>
+{% endfor %}
+
+
+<h1>{{ cart }}</h1>
+{% endblock%}
+
+<a href="/afterlogin">back to shoping</a>
+</html>

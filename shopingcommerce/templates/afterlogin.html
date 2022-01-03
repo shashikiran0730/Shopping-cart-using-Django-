@@ -1,0 +1,37 @@
+
+<style>
+    .itemname{
+        font-style: italic;
+    }
+    .row{
+    align-items: center;
+    }
+</style>
+<script>document.getElementById('submitbutton').innerText = 'added';</script>
+
+
+{% block content %}
+<h1>PRODUCTS</h1>
+<div class="carts">
+<h3><a href="/mycart">CART</a></div>
+{% for p in products %}
+<img src="{{p.imageurl}}" height="400" width="400"><br>
+    {{p.Itemname}}<br>  
+    {{p.price}}<br>
+    <form action='{% url "shoppingapp:cart" %}' method="post">
+        QUANTITY  <select  name="quantity" >
+            <option value="1">1</option>
+            <option value="3">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select><br>
+        <input type="hidden" value={{p.Itemid}} name='id'>
+    
+    <input onclick="this.value='added' " type="submit" value="addtocart" id="myButton1" />
+    {% csrf_token %}
+    </form>
+        {% endfor %}
+    </div>
+{% endblock %}
+<html>
+

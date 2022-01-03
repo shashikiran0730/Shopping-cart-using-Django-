@@ -1,0 +1,1 @@
+{"name":"Local: vjudge","url":"c:\\Users\\babbl\\Ecommerce\\shopingcommerce\\shoppingapp\\vjudge.py","tests":[{"id":1640960924667,"input":"2412","output":"TWO FOUR ONE TWO"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\babbl\\Ecommerce\\shopingcommerce\\shoppingapp\\vjudge.py","group":"local","local":true}

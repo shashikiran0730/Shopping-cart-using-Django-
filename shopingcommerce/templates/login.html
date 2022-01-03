@@ -1,0 +1,25 @@
+<html>
+<style>
+  .container1 {
+    padding: 100px;
+    margin-left: 400px;
+  }
+  input[type=text], input[type=password] {
+    width: 30%;
+    padding:10px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+</style>
+
+<div class="container1">
+<form action="login" method="POST"  >
+    {% csrf_token %}
+    Email:<input type="text" id="lname" name="email" placeholder="Enter email"><br>
+    password:<input type="password" id="pname" name="password" placeholder="Enter pass">
+    <br>
+    <input type="submit" value="Submit"></div>
+  </form>
+  </html>
