@@ -1,24 +1,61 @@
 <html>
+
+<style>
+    .mycart{
+        text-align: center;
+        border: 5px solid cyan;
+    }
+    .cards{
+        padding-left: 1%;
+        border: 8px solid pink;
+        margin-top: 1%;
+        width: fit-content;
+        float: left;
+        padding: 1%;
+        margin-right: 1%;
+        border-radius: 10%;
+    }
+    .cards img{
+        border-radius: 10%;
+    }
+    .qwerty{
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .back{
+        text-align: center;
+        font-weight: 1000;
+
+    }
+
+</style>
 {% block content %}
-<h1>MY CART</h1>
+<div class="main">
+<div class="mycart"><h1>MY CART</h1>
+</div>
+<div class="back">
+    <a href="/afterlogin">Back To Shopping</a>
+    </div>
 {% for p in products %}
-<img src="{{p.imageurl}}" height="400" width="400"><br>
-{{p.Itemid}}<br>
-{{p.Itemname}}<br>
-{{p.quantity}}
-<div class="removewcart">
-    <form action='{% url "shoppingapp:viewmycart" %}' method='post'>
-        <input type="hidden" value="{{p.Itemid}}" name="id">
+<div class="cards">
+<img src="{{p.imageurl}}" height="280" width="250"><br>
+<br>
+        {{p.Itemname}}<br>
+        {{p.quantity}}<br>  
+        {{p.price}} 
+    <form action='{% url "shoppingapp:viewmycart"%}' method='post'>
+        <input type="hidden" value="{{p.id}}" name="id">
         <input type="submit" value="Remove">
         {% csrf_token %}
     </form>
-    {% csrf_token %}   
-</div>
+    {% csrf_token %}  
+</div> 
 {% endfor %}
-
-
+<div class="qwerty">
 <h1>{{ cart }}</h1>
+</div>
 {% endblock%}
 
-<a href="/afterlogin">back to shoping</a>
+<a href="/buynow">payment</a>
+</div>
 </html>

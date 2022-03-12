@@ -20,4 +20,5 @@ import shoppingapp.urls as u
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include(u,namespace='shoppingapp')),
+
 ]

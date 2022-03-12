@@ -12,7 +12,7 @@ from shoppingapp.models import product
 from shoppingapp.models import mycart
 from . import sample
 object=sample.login()
-a=['s']
+
 from os import X_OK, name
 import firebase_admin
 from firebase_admin import credentials
@@ -27,9 +27,10 @@ cred1 = credentials.Certificate({
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-iax8m%40shoppingpython.iam.gserviceaccount.com"
+  "cgilient_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-iax8m%40shoppingpython.iam.gserviceaccount.com"
 }
 )
+
 firebase_admin.initialize_app(cred1)
 db=firestore.client()
 def home(request):
@@ -49,7 +50,8 @@ def register(request):
 def login(request):
     if request.method=='POST':
         email=request.POST['email']
-        a[0]=email
+        request.session['customername']=email
+        request.session.modified=True
         object.loginverify(email)
         password=request.POST['password']
         docs=db.collection('shoppingRegister').where('email','==',email).get()
@@ -62,28 +64,45 @@ def login(request):
     return render(request,'login.html')
 
 def afterlogin(request):
+    name=request.session['customername']
     p=product.objects.all()
-    return render(request,'afterlogin.html',{'products':p})
+    return render(request,'afterlogin.html',{'products':p,'name':name})
+
 def addtocart(request):
     id=request.POST['id']
     quantity=request.POST['quantity']
     print(quantity)
     p=product.objects.get(Itemid=id)
-    en=mycart(customeremail=sample.x,Itemid=p.Itemid,Itemname=p.Itemname,category=p.category,imageurl=p.imageurl,description=p.description,price=p.price,quantity=quantity)
+    event=mycart.objects.filter(Itemid=id)
+    price=int(p.price)*int(quantity)
+    en=mycart(customeremail=request.session['customername'],Itemid=p.Itemid,Itemname=p.Itemname,category=p.category,imageurl=p.imageurl,description=p.description,price=price,quantity=quantity)
     en.save()
     return redirect('/afterlogin')   
+
 def viewmycart(request):
-    n=a[0]
+    n=request.session['customername']
     if request.method=="POST":
         g=request.POST['id']
-        
-        event=mycart.objects.filter(Itemid=g)
-        if len(event)==0:
+        print(g)
+        try:
+            event=mycart.objects.get(id=g)
+            event.delete()
+            event=mycart.objects.all()
+            if event!=None:
+                for i in event:
+                    price=i.price*i.quantity
+                    return render(request,'mycart.html',{'products':event,'price':price})
             return render(request,'mycart.html',{'cart':'your cart is empty'})
-        print(len(event))
-        for i in event:
-            i.delete()
-        return render(request,'mycart.html',{'products':event})
+            
+        except:
+            event=mycart.objects.all()
+            for i in event:
+                price=i.price*i.quantity
+            if event!=None:
+                return render(request,'mycart.html',{'products':event,'price':price})
+            else:
+                return render(request,'mycart.html',{'cart':'your cart is empty'})
+            
     else:
         if n=='s':
             return redirect('/login')
@@ -92,5 +111,10 @@ def viewmycart(request):
             if len(p)==0:
                 return render(request,'mycart.html',{'cart':'your cart is empty'})
             return render(request,'mycart.html',{'products':p})
+def buynow(request):
+    return render(request,'buynow.html')
+def payment(request):
+    return render(request,'payment.html')
+    
 
 

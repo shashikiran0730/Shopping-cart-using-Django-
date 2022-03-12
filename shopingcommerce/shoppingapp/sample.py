@@ -8,7 +8,3 @@ class login():
         x=x1
         if x=='s':
             return render(request,'login.html')
-    def shashi(request):
-        global x
-        return x
-print(x)
