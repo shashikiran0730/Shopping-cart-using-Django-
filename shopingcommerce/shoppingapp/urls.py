@@ -11,6 +11,9 @@ urlpatterns=[
     path('cart',views.addtocart,name='cart'),
     path('mycart',views.viewmycart,name='viewmycart'),
     path('buynow',views.buynow,name='buynow'),
-    path('payment',views.payment,name='payment')
+    path('payment',views.payment,name='payment'),
+    path('adminlog',views.adminlog,name='adminlog'),
+    path('afteradminlogin',views.afteradminlogin,name='afteradminlogin'),
+    path('updatestatus',views.updatestatus,name='updatestatus'),
    
 ]

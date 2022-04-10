@@ -1,0 +1,11 @@
+<h1>ADMIN LOGIN</h1>
+<form action="adminlog" method="POST">
+    {% csrf_token %}
+    Empid<input type="text" name="empid" placeholder="Enter emp id"><br>
+    securitycode<input type="text" name="code" placeholder="Enter code"><br>
+    password<input type="password" name="password" placeholder="Enter pass"><br>
+    <input type="submit" value="submit">
+</form> 
+{% block content %}
+{{status}}
+{% endblock %}

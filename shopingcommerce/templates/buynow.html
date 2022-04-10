@@ -1,1 +1,76 @@
-<a href="/payment">PROCEED TO PAYMENT</a>
+<html>
+
+<style>
+    .mycart{
+        text-align: center;
+        border: 5px solid cyan;
+    }
+
+    .cards{
+        padding-left: 1%;
+        border: 8px solid pink;
+        margin-top: 1%;
+        width: fit-content;
+        float: left;
+        padding: 1%;
+        margin-right: 1%;
+        border-radius: 10%;
+    }
+    .cards img{
+        border-radius: 10%;
+    }
+    .qwerty{
+        text-align: center;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .back{
+        text-align: center;
+        font-weight: 1000;
+
+    }
+    .h{
+        text-align: center;
+    }
+    .indu{
+        position: absolute;
+        bottom: 16px;
+        right:26px;
+    }
+    .kiran{
+        text-align: right;
+        margin-right: 40px;
+    }
+    h4{
+        text-align: center;
+        margin-right: 15px;
+    }
+</style>
+{% block content %}
+<div class="main">
+<h1></h1>
+<div class="main">
+    <div class="mycart"><h2>CHECK BILL  <br><h4><a href="/mycart">BACKTOCART</a> &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp <a href="/afterlogin">HOME</a></h6></h4></h2>
+        
+
+    </div>
+{% for p in products %}
+<div class="cards">
+<img src="{{p.imageurl}}" height="280" width="250"><br>
+<br>
+        {{p.Itemname}}<br>
+        {{p.quantity}}<br>  
+        {{p.price}} 
+        {% csrf_token %}
+    </form>
+    {% csrf_token %}  
+</div> 
+{% endfor %}
+{% endblock%}
+</div>
+<div class="bill">
+<div class="indu"><h1>Total Payment: ${{bill}}</h1>
+    <a href="/payment">conform Order</a>
+    
+</div>
+
+</html>

@@ -1,0 +1,17 @@
+<html>
+    {%block content %}
+    {% for p in products %}
+    {{p.customeremail}}
+    {{p.Itemname}}
+    {{p.price}}
+    {{p.quantity}}
+    {{p.totalprice}}
+    <form action='{% url "shoppingapp:updatestatus"%}' method="POST">
+        {% csrf_token %}
+        <input type="text" name="status" value={{p.status}}>
+        <input type="hidden" name="shashiid" value="{{p.id}}">
+        <input type="submit" value="update"></form>
+    <br>
+   {% endfor %}
+    {% endblock %}
+    </html>

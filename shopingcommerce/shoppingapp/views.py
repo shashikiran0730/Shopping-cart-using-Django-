@@ -1,4 +1,3 @@
-from io import RawIOBase
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.shortcuts import render
@@ -6,10 +5,10 @@ from django.http import HttpResponse
 from django.http import request
 from django.core.mail import send_mail
 from django.conf import settings 
-from .models import product
+from .models import orderconform, product
 from .carts import cart
 from shoppingapp.models import product
-from shoppingapp.models import mycart
+from shoppingapp.models import mycart,adminlogin as al
 from . import sample
 object=sample.login()
 
@@ -71,7 +70,6 @@ def afterlogin(request):
 def addtocart(request):
     id=request.POST['id']
     quantity=request.POST['quantity']
-    print(quantity)
     p=product.objects.get(Itemid=id)
     event=mycart.objects.filter(Itemid=id)
     price=int(p.price)*int(quantity)
@@ -83,7 +81,6 @@ def viewmycart(request):
     n=request.session['customername']
     if request.method=="POST":
         g=request.POST['id']
-        print(g)
         try:
             event=mycart.objects.get(id=g)
             event.delete()
@@ -92,8 +89,7 @@ def viewmycart(request):
                 for i in event:
                     price=i.price*i.quantity
                     return render(request,'mycart.html',{'products':event,'price':price})
-            return render(request,'mycart.html',{'cart':'your cart is empty'})
-            
+            return render(request,'mycart.html',{'cart':'your cart is empty'})  
         except:
             event=mycart.objects.all()
             for i in event:
@@ -104,17 +100,65 @@ def viewmycart(request):
                 return render(request,'mycart.html',{'cart':'your cart is empty'})
             
     else:
-        if n=='s':
-            return redirect('/login')
-        else:
             p=mycart.objects.filter(customeremail=n)
             if len(p)==0:
                 return render(request,'mycart.html',{'cart':'your cart is empty'})
             return render(request,'mycart.html',{'products':p})
 def buynow(request):
-    return render(request,'buynow.html')
+    p=mycart.objects.filter(customeremail=request.session['customername'])
+    s=0
+    for i in p:
+        s+=i.price
+    request.session['bill']=str(s)
+    return render(request,'buynow.html',{'products':p,'bill':s})
+
 def payment(request):
-    return render(request,'payment.html')
-    
+    n=(request.session['bill'])
+    event=orderconform.objects.filter(customeremail=request.session['customername'])
+    event.delete()
+    event=mycart.objects.all()
+    for i in event:
+        price=i.price*i.quantity
+        d=orderconform(customeremail=request.session['customername'],Itemid=i.Itemid,Itemname=i.Itemname,price=price,quantity=i.quantity,totalprice=n)
+        d.save()
+    return render(request,'enjoyshopping.html')
+
+def adminlog(request):
+    if request.method=='POST':
+        empid=request.POST['empid']
+        securitycode=request.POST['code']
+        password=request.POST['password']   
+        p=al.objects.all()
+        for i in p:
+            if str(i.empid)==str(empid):
+                if str(i.securitycode)==str(securitycode):
+                    if str(i.password)==str(password):
+                        return redirect('/afteradminlogin')
+                    else:
+                        status="incorrect password"
+                        return render(request,'adminlog.html',{'status':status})
+                else:
+                    status="incorrect security code"
+                    return render(request,'adminlog.html',{'status':status})
+            else:
+                status="incorrect empid"
+                return render(request,'adminlog.html',{'status':status})
+    return render(request,'adminlog.html')
+def afteradminlogin(request):
+    products=orderconform.objects.all()
+    return render(request,'afteradminlogin.html',{'products':products})
+def updatestatus(request):
+    if request.method=="POST":
+        g=request.POST['status']
+        id=request.POST['shashiid']
+        print(id)
+        products=orderconform.objects.all()
+        for i in products:
+            if str(i.id)==str(id):
+                i.status=g
+            i.save()
+        return render(request,'afteradminlogin.html',{'products':products})
+    return render(request,'afteradminlogin.html')
+
 
 
