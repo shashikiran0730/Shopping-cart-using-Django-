@@ -147,6 +147,8 @@ def adminlog(request):
 def afteradminlogin(request):
     products=orderconform.objects.all()
     return render(request,'afteradminlogin.html',{'products':products})
+
+
 def updatestatus(request):
     if request.method=="POST":
         g=request.POST['status']
